@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 :root {
-  --main-darklg: #352f44;
-  --main-dark: #2a2438;
-  --primary-color: #411e8f;
+  --main-darklg: #222939;
+  --main-dark: #222939;
+  --primary-color: #222939;
   --main-light: #eeeeee;
   font-family: "Poppins", sans-serif;
 }
@@ -159,12 +159,12 @@ video {
 .main__right {
   display: none;
   /* display: flex; */
-  flex: 0.2;
+  flex: 0.3;
   position: absolute;
   right: 0;
   height: 92%;
   flex-direction: column;
-  background-color: #352f44;
+  background-color: #2e374c;
   overflow-y: scroll;
 }
 
@@ -233,12 +233,14 @@ video {
 }
 
 .header__back {
-  display: none;
-  position: absolute;
-  font-size: 1.3rem;
-  top: 17px;
-  left: 28px;
+  display: flex;
+  width: 90vw;
+  align-items: center;
   color: #fff;
+}
+.header__back > img {
+  height: 40px;
+  filter: invert(1);
 }
 
 @media (max-width: 700px) {

@@ -12,6 +12,9 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
+const AuthMiddleware = require("./middleware/isAuth");
+
+const user = require("./Routes/user");
 
 const User = require("./Models/User");
 
@@ -20,9 +23,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/Face-Me", {
   useUnifiedTopology: true,
 });
 
-app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 
 app.use(
   require("express-session")({
@@ -39,17 +42,24 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 var Usr = {};
 
 app.use("/peerjs", peerServer);
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
+app.use("/auth", user);
+
+app.get("/", AuthMiddleware, (req, res) => {
   res.redirect(`/${uuidv4()}`);
 });
 
-app.get("/:room", (req, res) => {
-  res.render("room", { roomId: req.param.room });
+app.get("/:room", AuthMiddleware, (req, res) => {
+  res.render("room", { roomId: req.param.room, userName: req.user.username });
 });
 
 io.on("connection", (socket) => {

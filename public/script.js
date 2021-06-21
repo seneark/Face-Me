@@ -34,7 +34,7 @@ showChat.addEventListener("click", () => {
 
 var allUsers = [];
 
-const user = prompt("Enter your name");
+const user = USERNAME;
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -160,10 +160,28 @@ stopVideo.addEventListener("click", () => {
 });
 
 inviteButton.addEventListener("click", (e) => {
-  prompt(
-    "Copy this link and send it to people you want to meet with",
-    window.location.href
-  );
+  Snackbar.show({
+    text: "Here is the join link for your call: " + window.location.href,
+    actionText: "Copy Link",
+    width: "950px",
+    pos: "top-center",
+    actionTextColor: "#616161",
+    duration: 500000,
+    backgroundColor: "#16171a",
+    onActionClick: function (element) {
+      // Copy url to clipboard, this is achieved by creating a temporary element,
+      // adding the text we want to that element, selecting it, then deleting it
+      var copyContent = window.location.href;
+      $('<input id="some-element">')
+        .val(copyContent)
+        .appendTo("body")
+        .select();
+      document.execCommand("copy");
+      var toRemove = document.querySelector("#some-element");
+      toRemove.parentNode.removeChild(toRemove);
+      Snackbar.close();
+    },
+  });
 });
 
 function requestToggleCaptions() {
@@ -173,7 +191,7 @@ function requestToggleCaptions() {
     receivingCaptions = false;
   } else {
     Snackbar.show({
-      text: "This will write out whatever is being said.",
+      text: "This Displays Captions but only in Chrome window.",
       width: "400px",
       pos: "bottom-center",
       actionTextColor: "#616161",

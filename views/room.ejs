@@ -14,15 +14,16 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script>
 			const ROOM_ID = "<%= roomId %>";
+			const USERNAME = "<%= userName %>"
 		</script>
 	</head>
 	<body>
 		<div class="header">
 			<div class="logo">
 				<div class="header__back">
-					<i class="fas fa-angle-left"></i>
+				<img src="assets/face.png"/>
+					<h3 id="screen-title">&nbsp;&nbsp;Face Me</h3>
 				</div>
-				<h3>Video Chat</h3>
 				<p style="color: white" id="remote-video-text"></p>
 			</div>
 		</div>
