@@ -82,7 +82,8 @@ const connectToNewUser = (userId, stream, name) => {
 };
 
 peer.on("open", (id) => {
-  socket.emit("join-room", ROOM_ID, id, user);
+  let room_id = window.location.pathname;
+  socket.emit("join-room", room_id.split("/")[1].toString(), id, user);
 });
 
 const addVideoStream = (video, stream, name) => {
