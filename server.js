@@ -13,13 +13,13 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
 const AuthMiddleware = require("./middleware/isAuth");
-
+const db = require("./config/keys").mongoURI;
 const user = require("./Routes/user");
 const notes_ = require("./Routes/notes");
 
 const User = require("./Models/User");
 
-mongoose.connect("mongodb://127.0.0.1:27017/Face-Me", {
+mongoose.connect(db, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

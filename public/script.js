@@ -43,8 +43,8 @@ const user = USERNAME;
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
-  host: "/",
-  port: "3030",
+  host: "face-me-engage.herokuapp.com",
+  port: "443",
 });
 
 let myVideoStream;
