@@ -78,9 +78,12 @@ io.on("connection", (socket) => {
       Usr[roomId] = [];
     }
     Usr[roomId].push(userName);
-    io.to(roomId).emit("UserName", Usr[roomId]);
     await socket.on("message", async (message) => {
       await io.to(roomId).emit("createMessage", message, userName);
+    });
+    await socket.on("disconnect", () => {
+      socket.to(roomId).broadcast.emit("user-disconnected", userId, userName);
+
     });
   });
 

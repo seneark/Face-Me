@@ -7,8 +7,8 @@ const passport = require("passport");
 router.get("/", (req, res) => {
   res.render("auth.ejs");
 });
-router.get("/test", (req, res) => {
-  res.json({ msg: "success" });
+router.get("/home", AuthMiddleware, (req, res) => {
+  res.render("home.ejs", { userName: req.user.username });
 });
 
 router.post("/signUp", (req, res) => {
@@ -31,7 +31,7 @@ router.post("/signUp", (req, res) => {
 router.post(
   "/signIn",
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/auth/home",
     failureRedirect: "/auth",
   }),
   function (req, res) {

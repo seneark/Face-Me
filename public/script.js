@@ -3,21 +3,28 @@ const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
 
 const showChat = document.querySelector("#showChat");
-const backBtn = document.querySelector(".header__back");
+const endBtn = document.querySelector("#endCall");
 myVideo.muted = true;
-var receivingCaptions = false;
-var sendingCaptions = false;
-var VideoChatRecognition = undefined;
 
-var isChats = false;
-var addVideoCount = 0;
-var junkVideoCount = 0;
+// variable for Captions
+let receivingCaptions = false;
+let sendingCaptions = false;
+let VideoChatRecognition = undefined;
 
-backBtn.addEventListener("click", () => {
-  document.querySelector(".main__left").style.display = "flex";
-  document.querySelector(".main__left").style.flex = "1";
-  document.querySelector(".main__right").style.display = "none";
-  document.querySelector(".header__back").style.display = "none";
+// whether the chats are shown ot not
+let isChats = false;
+let addVideoCount = 0;
+let junkVideoCount = 0;
+
+// variable for peers
+let myID;
+let UserName;
+const peers_connected = {};
+
+endBtn.addEventListener("click", () => {
+  let host = window.location.host;
+  let protocol = window.location.protocol;
+  window.location.replace(protocol + "//" + host + "/auth/home");
 });
 
 showChat.addEventListener("click", () => {
@@ -31,8 +38,6 @@ showChat.addEventListener("click", () => {
     isChats = false;
   }
 });
-
-var allUsers = [];
 
 const user = USERNAME;
 
@@ -51,50 +56,61 @@ navigator.mediaDevices
   .then((stream) => {
     myVideoStream = stream;
     console.log("then");
-    addVideoStream(myVideo, stream, user);
+    const main = document.createElement("div");
+    addVideoStream(main, myVideo, stream, user);
     peer.on("call", (call) => {
       call.answer(stream);
       const video = document.createElement("video");
+      const main = document.createElement("div");
       call.on("stream", (userVideoStream) => {
+        console.log(call.metadata.userName);
         if (addVideoCount % 2 != 0) {
-          addVideoStream(
-            video,
-            userVideoStream,
-            allUsers[parseInt(addVideoCount / 2)]
-          );
+          addVideoStream(main, video, userVideoStream, call.metadata.userName);
         }
         addVideoCount++;
       });
+      peers_connected[call.metadata.id] = main;
     });
 
     socket.on("user-connected", (userId, name) => {
       connectToNewUser(userId, stream, name);
     });
+
+    socket.on("user-disconnected", (userId) => {
+      if (peers_connected[userId]) peers_connected[userId].remove();
+    });
   });
 
 const connectToNewUser = (userId, stream, name) => {
-  const call = peer.call(userId, stream);
+  const call = peer.call(userId, stream, {
+    metadata: { id: myID, userName: UserName },
+  });
   const video = document.createElement("video");
+  const main = document.createElement("div");
   call.on("stream", (userVideoStream) => {
-    if (junkVideoCount % 2 != 0) addVideoStream(video, userVideoStream, name);
+    if (junkVideoCount % 2 != 0)
+      addVideoStream(main, video, userVideoStream, name);
     junkVideoCount++;
   });
+
+  peers_connected[userId] = main;
 };
 
 peer.on("open", (id) => {
   let room_id = window.location.pathname;
+  myID = id;
+  UserName = user;
   socket.emit("join-room", room_id.split("/")[1].toString(), id, user);
 });
 
-const addVideoStream = (video, stream, name) => {
-  var main = document.createElement("div");
+const addVideoStream = (main, video, stream, name) => {
   main.className = "main-cont";
   main.draggable = "true";
   video.srcObject = stream;
-  var bod = document.createElement("div");
+  const bod = document.createElement("div");
   bod.className = "overlay";
-  var tag = document.createElement("p"); // <p></p>
-  var text = document.createTextNode(name);
+  const tag = document.createElement("p"); // <p></p>
+  const text = document.createTextNode(name);
   tag.appendChild(text);
   tag.style.cssText = "color:white";
   bod.appendChild(tag);
@@ -171,13 +187,10 @@ inviteButton.addEventListener("click", (e) => {
     onActionClick: function (element) {
       // Copy url to clipboard, this is achieved by creating a temporary element,
       // adding the text we want to that element, selecting it, then deleting it
-      var copyContent = window.location.href;
-      $('<input id="some-element">')
-        .val(copyContent)
-        .appendTo("body")
-        .select();
+      const copyContent = window.location.href;
+      $('<input id="some-element">').val(copyContent).appendTo("body").select();
       document.execCommand("copy");
-      var toRemove = document.querySelector("#some-element");
+      const toRemove = document.querySelector("#some-element");
       toRemove.parentNode.removeChild(toRemove);
       Snackbar.close();
     },
@@ -276,13 +289,9 @@ socket.on("createMessage", (message, userName) => {
     messages.innerHTML +
     `<div class="message">
         <span> <b><span> ${
-          userName === user ? "me" : userName
+          userName === user ? "Me" : userName
         }<br/></span> </b>${message}</span>
     </div>`;
-});
-
-socket.on("UserName", (Users) => {
-  allUsers = Users;
 });
 
 socket.on("requestToggleCaptions", () => toggleSendCaptions());
