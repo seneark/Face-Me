@@ -1,16 +1,52 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,800;0,900;1,200;1,300&display=swap");
 :root {
-  --main-darklg: #222939;
-  --main-dark: #222939;
-  --primary-color: #222939;
+  --main-darklg: #33343d;
+  --main-dark: #393b44;
+  --primary-color: #33343d;
   --main-light: #eeeeee;
   font-family: "Poppins", sans-serif;
 }
-
 * {
   margin: 0;
   padding: 0;
+}
+body {
+  background-color: var(--main-dark);
+}
+h1 {
+  color: white;
+  letter-spacing: 0.3rem;
+  font-family: "Nunito", sans-serif;
+}
+p {
+  color: white;
+  font-size: 20px;
+  font-family: "Nunito", sans-serif;
+}
+.title {
+  text-align: center;
+  padding-bottom: 3%;
+}
+.drawing-space {
+  height: 73vh;
+}
+.video-space {
+  height: 80vh;
+}
+
+canvas {
+  background-color: var(--main-dark);
+  width: 100%;
+  height: 65vh;
+  border: 2px solid black;
+}
+
+textarea {
+  width: 100%;
+  height: 70vh;
+  background-color: var(--main-dark);
+  color: white;
+  font-family: "Nunito", sans-serif;
 }
 
 .header {
@@ -53,10 +89,10 @@
 }
 video {
   position: relative;
-  height: 300px;
+  height: 150px;
   border-radius: 1rem;
   margin: 0.5rem;
-  width: 400px;
+  width: 250px;
   object-fit: cover;
   z-index: 0;
   transform: rotateY(180deg);
@@ -164,7 +200,7 @@ video {
   right: 0;
   height: 92%;
   flex-direction: column;
-  background-color: #2e374c;
+  background-color: var(--primary-color);
   overflow-y: scroll;
 }
 

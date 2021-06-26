@@ -15,6 +15,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const AuthMiddleware = require("./middleware/isAuth");
 
 const user = require("./Routes/user");
+const notes_ = require("./Routes/notes");
 
 const User = require("./Models/User");
 
@@ -47,12 +48,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-var Usr = {};
-
 app.use("/peerjs", peerServer);
 app.use(express.static("public"));
 
 app.use("/auth", user);
+app.use("/notes", notes_);
 
 app.get("/", AuthMiddleware, (req, res) => {
   res.redirect(`/${uuidv4()}`);
@@ -61,6 +61,12 @@ app.get("/", AuthMiddleware, (req, res) => {
 app.get("/:room", AuthMiddleware, (req, res) => {
   res.render("room", { roomId: req.param.room, userName: req.user.username });
 });
+
+var Usr = {};
+
+var line_history = {};
+var notes = {};
+var notes_taken = {};
 
 io.on("connection", (socket) => {
   socket.on("join-room", async (roomId, userId, userName) => {
@@ -75,6 +81,41 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("UserName", Usr[roomId]);
     await socket.on("message", async (message) => {
       await io.to(roomId).emit("createMessage", message, userName);
+    });
+  });
+
+  // canvas and notes
+  socket.on("join-notes", (roomId) => {
+    socket.join(roomId);
+    if (!(roomId in line_history)) {
+      line_history[roomId] = [];
+      notes[roomId] = null;
+      notes_taken[roomId] = 0;
+    }
+    socket.emit("startup", {
+      notes: notes[roomId],
+      notes_taken: notes_taken[roomId],
+    });
+    if (roomId in line_history)
+      for (var i in line_history[roomId]) {
+        socket.emit("draw_line", line_history[roomId][i]);
+      }
+    // add handler for message type "draw_line".
+    socket.on("draw_line", function (data) {
+      // add received line to history
+      line_history[roomId].push(data);
+      // send line to all clients
+      io.emit("draw_line", data);
+    });
+
+    socket.on("clear_canvas", function () {
+      line_history[roomId] = [];
+      io.emit("clear_canvas");
+    });
+
+    socket.on("notes_content", function (data) {
+      notes[roomId] = data.notes;
+      io.emit("notes_content", data);
     });
   });
 });
