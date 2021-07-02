@@ -17,6 +17,8 @@ const db = require("./config/keys").mongoURI;
 const user = require("./Routes/user");
 const notes_ = require("./Routes/notes");
 
+const Transcript = require("./Models/Transcript");
+
 const User = require("./Models/User");
 
 mongoose.connect(db, {
@@ -62,11 +64,32 @@ app.get("/:room", AuthMiddleware, (req, res) => {
 	res.render("room", { roomId: req.param.room, userName: req.user.username });
 });
 
+const add_transcript = (userName, messages_obj) => {
+	// console.log(messages_obj);
+
+	const newTranscript = new Transcript({
+		username: userName,
+		date: new Date(),
+	});
+	// newTranscript.messages.push(messages_obj[0])
+
+	newTranscript.save().then((data) => {
+		// console.log(data);
+		Transcript.findOneAndUpdate({ _id: data._id }, { $set: { messages: messages_obj } })
+			.then((data) => {
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+	});
+};
+
 var Usr = {};
 
 var line_history = {};
 var notes = {};
 var notes_taken = {};
+
+var messages_obj = {};
 
 io.on("connection", (socket) => {
 	socket.on("join-room", async (roomId, userId, userName) => {
@@ -76,13 +99,32 @@ io.on("connection", (socket) => {
 		await socket.to(roomId).broadcast.emit("user-connected", userId, userName);
 		if (!(roomId in Usr)) {
 			Usr[roomId] = [];
+			messages_obj[roomId] = [];
 		}
+		messages_obj[roomId].push({
+			type_msg: "join",
+			messages: userName + " joined the meeting",
+			sender: "Admin",
+		});
+		socket.to(roomId).emit("participants", userName + " joined the meeting", "join");
 		Usr[roomId].push(userName);
 		await socket.on("message", async (message) => {
+			messages_obj[roomId].push({
+				type_msg: "message",
+				messages: message,
+				sender: userName,
+			});
 			await io.to(roomId).emit("createMessage", message, userName);
 		});
 		await socket.on("disconnect", () => {
+			messages_obj[roomId].push({
+				type_msg: "leave",
+				messages: userName + " left the meeting",
+				sender: "Admin",
+			});
 			socket.to(roomId).broadcast.emit("user-disconnected", userId, userName);
+			socket.to(roomId).emit("participants", userName + " left the meeting", "leave");
+			add_transcript(userName, messages_obj[roomId]);
 		});
 	});
 

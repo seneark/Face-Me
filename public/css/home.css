@@ -1,167 +1,164 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300:400:600);
 
 body {
-  margin: 0;
-  background: linear-gradient(100deg, #33343d 0, #4e515e 75%, #33343d 100%);
+	margin: 0;
+	background: linear-gradient(100deg, #AEDEFC 0, #ffffff 75%, #AEDEFC 100%);
 }
 
 h1 {
-  font-family: "Lato", sans-serif;
-  font-weight: 600;
-  letter-spacing: 2px;
-  font-size: 48px;
+	font-family: "Lato", sans-serif;
+	font-weight: 600;
+	letter-spacing: 2px;
+	font-size: 48px;
 }
 h2 {
-  font-family: "Lato", sans-serif;
-  font-weight: 300;
-  letter-spacing: 1px;
-  font-size: 30px;
+	font-family: "Lato", sans-serif;
+	font-weight: 300;
+	letter-spacing: 1px;
+	font-size: 30px;
 }
 p {
-  font-family: "Lato", sans-serif;
-  letter-spacing: 1px;
-  font-size: 14px;
-  color: #333333;
+	font-family: "Lato", sans-serif;
+	letter-spacing: 1px;
+	font-size: 14px;
+	color: #333333;
 }
 
 .header {
-  position: relative;
-  text-align: center;
-  background: linear-gradient(100deg, #33343d 0, #4e515e 75%, #33343d 100%);
-  color: white;
+	position: relative;
+	text-align: center;
+	background: linear-gradient(100deg, #AEDEFC 0, #ffffff 75%, #AEDEFC 100%);
 }
 .logo {
-  width: 50px;
-  fill: white;
-  padding-right: 15px;
-  display: inline-block;
-  vertical-align: middle;
+	width: 50px;
+	fill: white;
+	padding-right: 15px;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .inner-header {
-  position: relative;
-  height: 85vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+	position: relative;
+	height: 85vh;
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 .username {
-  position: absolute;
-  color: white;
-  right: 40px;
-  font-weight: 600;
+	position: absolute;
+	right: 40px;
+	font-weight: 600;
 }
 .inner-header img {
-  height: 400px;
-  width: 600px;
-  border-radius: 50px;
+	height: 400px;
+	width: 600px;
+	border-radius: 50px;
 }
 
 .inner-header a {
-  font-family: "Lato", sans-serif;
-  letter-spacing: 1px;
-  font-size: 20px;
-  margin: 10px;
-  text-decoration: none;
+	font-family: "Lato", sans-serif;
+	letter-spacing: 1px;
+	font-size: 15px;
+	margin: 10px;
+	text-decoration: none;
 }
 a,
 a::after {
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
 }
 
 a {
-  background: none;
-  border: 3px solid #fff;
-  border-radius: 5px;
-  color: #fff;
-  display: block;
-  font-size: 1.6em;
-  font-weight: bold;
-  margin: 1em auto;
-  padding: 1em 2em;
-  position: relative;
-  text-transform: uppercase;
+	background: none;
+	border: 3px solid #fff;
+	border-radius: 5px;
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 1em auto;
+	padding: 1em 2em;
+	position: relative;
+	text-transform: uppercase;
 }
 
 a::before,
 a::after {
-  background: #fff;
-  content: "";
-  position: absolute;
-  z-index: -1;
+	background: #fff;
+	content: "";
+	position: absolute;
+	z-index: -1;
 }
 
 a:hover {
-  color: #ff5fa0;
-  text-decoration: underline;
+	color: #ff5fa0;
+	text-decoration: underline;
 }
 
 .flex {
-  /*Flexbox for containers*/
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+	/*Flexbox for containers*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 }
 
 .waves {
-  position: relative;
-  width: 100%;
-  height: 15vh;
-  margin-bottom: -7px; /*Fix for safari gap*/
-  min-height: 100px;
-  max-height: 150px;
+	position: relative;
+	width: 100%;
+	height: 15vh;
+	margin-bottom: -7px; /*Fix for safari gap*/
+	min-height: 100px;
+	max-height: 150px;
 }
 
 .content {
-  position: relative;
-  height: 20vh;
-  text-align: center;
-  background-color: white;
+	position: relative;
+	height: 20vh;
+	text-align: center;
+	background-color: white;
 }
 
 /* Animation */
 
 .parallax > use {
-  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+	animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 }
 .parallax > use:nth-child(1) {
-  animation-delay: -2s;
-  animation-duration: 7s;
+	animation-delay: -2s;
+	animation-duration: 7s;
 }
 .parallax > use:nth-child(2) {
-  animation-delay: -3s;
-  animation-duration: 10s;
+	animation-delay: -3s;
+	animation-duration: 10s;
 }
 .parallax > use:nth-child(3) {
-  animation-delay: -4s;
-  animation-duration: 13s;
+	animation-delay: -4s;
+	animation-duration: 13s;
 }
 .parallax > use:nth-child(4) {
-  animation-delay: -5s;
-  animation-duration: 20s;
+	animation-delay: -5s;
+	animation-duration: 20s;
 }
 @keyframes move-forever {
-  0% {
-    transform: translate3d(-90px, 0, 0);
-  }
-  100% {
-    transform: translate3d(85px, 0, 0);
-  }
+	0% {
+		transform: translate3d(-90px, 0, 0);
+	}
+	100% {
+		transform: translate3d(85px, 0, 0);
+	}
 }
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
-  .waves {
-    height: 40px;
-    min-height: 40px;
-  }
-  .content {
-    height: 30vh;
-  }
-  h1 {
-    font-size: 24px;
-  }
+	.waves {
+		height: 40px;
+		min-height: 40px;
+	}
+	.content {
+		height: 30vh;
+	}
+	h1 {
+		font-size: 24px;
+	}
 }

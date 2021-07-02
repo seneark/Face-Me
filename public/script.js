@@ -3,6 +3,7 @@ const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
 
 const showChat = document.querySelector("#showChat");
+const showPeople = document.querySelector("#participants");
 const endBtn = document.querySelector("#endCall");
 myVideo.muted = true;
 
@@ -13,6 +14,7 @@ let VideoChatRecognition = undefined;
 
 // whether the chats are shown ot not
 let isChats = false;
+let isPeople = false;
 let addVideoCount = 0;
 let junkVideoCount = 0;
 let modeScreen = "camera";
@@ -32,10 +34,30 @@ showChat.addEventListener("click", () => {
 	if (isChats === false) {
 		document.querySelector(".main__right").style.display = "flex";
 		document.querySelector(".main__left").style.flex = "0.88";
+		document.querySelector(".main__right_2").style.display = "none";
 		isChats = true;
+		isPeople = false;
 	} else {
 		document.querySelector(".main__right").style.display = "none";
+		document.querySelector(".main__right_2").style.display = "none";
 		document.querySelector(".main__left").style.flex = "1";
+		isChats = false;
+		isPeople = false;
+	}
+});
+
+showPeople.addEventListener("click", () => {
+	if (isPeople === false) {
+		document.querySelector(".main__right_2").style.display = "flex";
+		document.querySelector(".main__left").style.flex = "0.88";
+		document.querySelector(".main__right").style.display = "none";
+		isPeople = true;
+		isChats = false;
+	} else {
+		document.querySelector(".main__right_2").style.display = "none";
+		document.querySelector(".main__right").style.display = "none";
+		document.querySelector(".main__left").style.flex = "1";
+		isPeople = false;
 		isChats = false;
 	}
 });
@@ -78,6 +100,7 @@ navigator.mediaDevices
 		});
 
 		socket.on("user-disconnected", (userId) => {
+			console.log(peers_connected);
 			if (peers_connected[userId]) peers_connected[userId].remove();
 		});
 	});
@@ -125,6 +148,7 @@ const addVideoStream = (main, video, stream, name) => {
 let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
 let messages = document.querySelector(".messages");
+let participants = document.querySelector(".participants");
 
 send.addEventListener("click", (e) => {
 	if (text.value.length !== 0) {
@@ -354,6 +378,24 @@ socket.on("createMessage", (message, userName) => {
 		`<div class="message">
         <span> <b><span> ${userName === user ? "Me" : userName}<br/></span> </b>${message}</span>
     </div>`;
+});
+
+socket.on("participants", (message, type) => {
+	if (type === "join") {
+		participants.innerHTML =
+			participants.innerHTML +
+			`<div class="join-person">
+		<span> ${message}</span>
+		</div>
+		`;
+	} else {
+		participants.innerHTML =
+			participants.innerHTML +
+			`<div class="leave-person">
+		<span> ${message}</span>
+		</div>
+		`;
+	}
 });
 
 socket.on("requestToggleCaptions", () => toggleSendCaptions());

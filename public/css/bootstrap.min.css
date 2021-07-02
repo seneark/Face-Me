@@ -6168,7 +6168,6 @@ button.list-group-item-danger.active:hover {
 }
 .well {
   min-height: 20px;
-  padding: 19px;
   margin-bottom: 20px;
   background-color: var(--main-dark);
   border: 1px solid var(--main-dark);
