@@ -5,6 +5,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
 		<script src="https://kit.fontawesome.com/c939d0e917.js"></script>
 		<link rel="stylesheet" href="/css/chats.css" />
+		<link rel="stylesheet" href="/snackbar.css" />
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -48,7 +49,16 @@
 			</div>
 			<div class="content">
 				<% for(let i=0;i < chats.length; i++){ %>
+
 				<div class="messages" id="messages-<%=chats[i].title%>">
+					<div class="contact-profile">
+						<p><%=chats[i].title%></p>
+						<div class="social-media">
+							<i class="fa fa-share" aria-hidden="true" onClick="share()"></i>
+						</div>
+					</div>
+					<br />
+					<br />
 					<ul>
 						<% for(let j = 0; j< chats[i].messages.length; j++){%> <%if(chats[i].messages[j].sender === UserName){%>
 						<li class="sent">
@@ -79,4 +89,6 @@
 		</div>
 	</body>
 	<script src="/js/chats.js"></script>
+	<script src="/snackbar.js"></script>
+	<script src="/autolink.js"></script>
 </html>

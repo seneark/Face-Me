@@ -88,6 +88,28 @@ function showMsg(val) {
 	}
 }
 
+function share() {
+	Snackbar.show({
+		text: "Here is the join link for your call: " + window.location.origin + "/join/" + foo,
+		actionText: "Copy Link",
+		width: "950px",
+		pos: "top-center",
+		actionTextColor: "#616161",
+		duration: 500000,
+		backgroundColor: "#16171a",
+		onActionClick: function (element) {
+			// Copy url to clipboard, this is achieved by creating a temporary element,
+			// adding the text we want to that element, selecting it, then deleting it
+			const copyContent = window.location.origin + "/join/" + foo;
+			$('<input id="some-element">').val(copyContent).appendTo("body").select();
+			document.execCommand("copy");
+			const toRemove = document.querySelector("#some-element");
+			toRemove.parentNode.removeChild(toRemove);
+			Snackbar.close();
+		},
+	});
+}
+
 socket.on("createMessage", (message, userName, roomId) => {
 	if (userName === user) $('<li class="sent"><p>' + message + "</p></li>").appendTo($("#messages-" + roomId + " ul"));
 	else
