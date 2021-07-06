@@ -201,27 +201,27 @@ io.on("connection", (socket) => {
 		});
 	});
 	socket.on("join-chat", async (roomId) => {
-		console.log(roomId);
+		// console.log(roomId);
 		await socket.join(roomId);
 	});
 	socket.on("message", async (message, roomId, userName) => {
 		// socket.leaveAll();
 		socket.join(roomId);
-		console.log("f");
-		// Chat.findOneAndUpdate(
-		// 	{ title: roomId },
-		// 	{
-		// 		$push: {
-		// 			messages: {
-		// 				type_msg: "message",
-		// 				messages: message,
-		// 				sender: userName,
-		// 			},
-		// 		},
-		// 	}
-		// ).then((data) => {
-		// 	console.log("success");
-		// });
+		// console.log("f");
+		Chat.findOneAndUpdate(
+			{ title: roomId },
+			{
+				$push: {
+					messages: {
+						type_msg: "message",
+						messages: message,
+						sender: userName,
+					},
+				},
+			}
+		).then((data) => {
+			console.log("success");
+		});
 		await io.to(roomId).emit("createMessage", message, userName, roomId);
 	});
 

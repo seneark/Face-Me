@@ -2,6 +2,7 @@
 let prev = "";
 let foo = "";
 const socket = io("/");
+let rooms_joined = 0;
 
 $(document).ready(function () {
 	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
@@ -42,10 +43,10 @@ $(document).ready(function () {
 		if ($.trim(message) == "") {
 			return false;
 		}
-		console.log(message);
+		// console.log(message);
 		socket.emit("message", message, foo, user);
 
-		// $(".message-input input").val(null);
+		$(".message-input input").val(null);
 		$("#messages-" + foo).animate({ scrollTop: $("#messages-" + foo)[0].scrollHeight }, "fast");
 	}
 
@@ -59,16 +60,19 @@ $(document).ready(function () {
 			return false;
 		}
 	});
-});
 
-let rooms_joined = [];
+	if (rooms_joined == 0) {
+		for (let i = 0; i < Chats.length; i++) {
+			socket.emit("join-chat", Chats[i]);
+			rooms_joined = 1;
+		}
+	}
+});
 
 function showMsg(val) {
 	foo = val;
-	if (rooms_joined.indexOf(foo) == -1) {
-		rooms_joined.push(foo);
-		socket.emit("join-chat", foo);
-	}
+	// console.log(Chats);
+
 	if (prev.length === 0 || prev === foo) {
 		$("#wrap-" + foo).addClass("active");
 		prev = foo;
@@ -86,5 +90,9 @@ function showMsg(val) {
 
 socket.on("createMessage", (message, userName, roomId) => {
 	if (userName === user) $('<li class="sent"><p>' + message + "</p></li>").appendTo($("#messages-" + roomId + " ul"));
-	else $('<li class="sent"><p>' + message + "</p></li>").appendTo($("#messages-" + roomId + " ul"));
+	else
+		$('<li class="replies"><p><strong>' + userName + "</strong>: " + message + "</p></li>").appendTo(
+			$("#messages-" + roomId + " ul")
+		);
+	if (foo.length > 0) $("#messages-" + foo).animate({ scrollTop: $("#messages-" + foo)[0].scrollHeight }, "fast");
 });
