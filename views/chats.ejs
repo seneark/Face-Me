@@ -1,0 +1,182 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Title</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+		<script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+		<link rel="stylesheet" href="/css/chats.css" />
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script>
+			const user = "<%=UserName%>";
+			const Chats = <%- JSON.stringify(rooms) %>;
+		</script>
+	</head>
+	<body>
+		<div id="frame">
+			<div id="sidepanel">
+				<div id="profile">
+					<div class="wrap">
+						<p><%=UserName%></p>
+					</div>
+				</div>
+				<!-- <div id="search">
+					<label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+					<input type="text" placeholder="Search contacts..." />
+				</div> -->
+				<div id="contacts">
+					<ul>
+						<% for(let i=0;i < chats.length; i++){ %>
+						<li class="contact" id="wrap-<%=chats[i].title%>" onclick="showMsg('<%=chats[i].title%>')">
+							<div class="wrap" id="wrap-<%=chats[i].title%>">
+								<div class="meta">
+									<p class="name"><%= chats[i].title %></p>
+								</div>
+							</div>
+						</li>
+						<% } %>
+
+						<li class="contact" id="wrap-litt" onclick="showMsg(1)">
+							<div class="wrap" id="wrap-litt">
+								<span class="contact-status online"></span>
+								<img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
+								<div class="meta">
+									<p class="name">Louis Litt</p>
+								</div>
+							</div>
+						</li>
+						<li class="contact" id="wrap-harvey" onclick="showMsg(2)">
+							<div class="wrap">
+								<span class="contact-status busy"></span>
+								<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+								<div class="meta">
+									<p class="name">Harvey Specter</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="bottom-bar">
+					<button id="addcontact">
+						<i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span>
+					</button>
+					<button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
+				</div>
+			</div>
+			<div class="content">
+				<% for(let i=0;i < chats.length; i++){ %>
+				<div class="messages" id="messages-<%=chats[i].title%>">
+					<ul>
+						<% for(let j = 0; j< chats[i].messages.length; j++){%> <%if(chats[i].messages[j].sender === UserName){%>
+						<li class="sent">
+							<p><%= chats[i].messages[j].messages %></p>
+						</li>
+						<%} else if(chats[i].messages[j].sender == "Admin"){%>
+						<li class="admin">
+							<p><%= chats[i].messages[j].messages %></p>
+						</li>
+						<%} else {%>
+						<li class="replies">
+							<p><strong><%= chats[i].messages[j].sender %></strong> : <%= chats[i].messages[j].messages %></p>
+						</li>
+						<%}%> <%}%>
+					</ul>
+					<br />
+				</div>
+				<% } %>
+				<div class="messages" id="messages-litt">
+					<ul>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>Excuses don't win championships.</p>
+						</li>
+						<li class="sent">
+							<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+							<p>Oh yeah, did Michael Jordan tell you that?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>No, I told him that.</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>What are your choices when someone puts a gun to your head?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>Excuses don't win championships.</p>
+						</li>
+						<li class="sent">
+							<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+							<p>Oh yeah, did Michael Jordan tell you that?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>No, I told him that.</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>What are your choices when someone puts a gun to your head?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>Excuses don't win championships.</p>
+						</li>
+						<li class="sent">
+							<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+							<p>Oh yeah, did Michael Jordan tell you that?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>No, I told him that.</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>What are your choices when someone puts a gun to your head?</p>
+						</li>
+					</ul>
+				</div>
+
+				<div class="messages" id="messages-harvey">
+					<ul>
+						<li class="sent">
+							<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+							<p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>When you're backed against the wall, break the god damn thing down.</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>Excuses don't win championships.</p>
+						</li>
+						<li class="sent">
+							<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+							<p>Oh yeah, did Michael Jordan tell you that?</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>No, I told him that.</p>
+						</li>
+						<li class="replies">
+							<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+							<p>What are your choices when someone puts a gun to your head?</p>
+						</li>
+					</ul>
+				</div>
+
+				<div class="message-input">
+					<div class="wrap">
+						<input type="text" placeholder="Write your message..." />
+						<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+						<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="/js/chats.js"></script>
+</html>
