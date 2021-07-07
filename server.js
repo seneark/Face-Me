@@ -253,6 +253,7 @@ io.on("connection", (socket) => {
 				name: name,
 			}
 		).then((data) => {});
+		io.to(roomId).emit("rename-chat", roomId, name);
 	});
 
 	// canvas and notes
@@ -282,11 +283,17 @@ io.on("connection", (socket) => {
 			} else {
 				const newNotepad = new Notepad({
 					roomId: roomId,
-					$set: {
-						participants: userName,
-					},
 				});
-				await newNotepad.save();
+				await newNotepad.save().then((data) => {
+					Notepad.findOneAndUpdate(
+						{ roomId: roomId },
+						{
+							$push: {
+								participants: userName,
+							},
+						}
+					).then((data) => {});
+				});
 			}
 		});
 		socket.emit("startup", {

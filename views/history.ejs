@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1" />
+		<script src="/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/css/history.css" />
+		<!-- <link rel="stylesheet" type="text/css" href="/css/style.css" /> -->
+		<title>History</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="d-flex">
+				<h2>Notepad History</h2>
+				<a class="go-to-note" href="/notes">Start Collaborative Notepad</a>
+			</div>
+			<br />
+			<table class="table table-hover table-dark">
+				\
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Notepad Name</th>
+						<th scope="col">RoomId</th>
+						<th scope="col">Join Link</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<% for(let i=0;i< notes.length;i++){%>
+					<tr>
+						<th scope="row"><%=i+1%></th>
+						<td><%=notes[i].notes_title%></td>
+						<td><%=notes[i].roomId%></td>
+						<td><a href="/notes/create/<%=notes[i].roomId%>">Click here to access</a></td>
+					</tr>
+					<%}%>
+				</tbody>
+			</table>
+			<div class="wave-footer">
+				<svg
+					class="waves"
+					xmlns="http://www.w3.org/2000/svg"
+					xmlns:xlink="http://www.w3.org/1999/xlink"
+					viewBox="0 24 150 28"
+					preserveAspectRatio="none"
+					shape-rendering="auto"
+				>
+					<defs>
+						<path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+					</defs>
+					<g class="parallax">
+						<use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(105,0,255,0.2)" />
+						<use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(105,0,255,0.2)" />
+						<use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(105,0,255,0.2)" />
+						<use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(105,0,255,0.2)" />
+					</g>
+				</svg>
+			</div>
+		</div>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+			integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+			integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

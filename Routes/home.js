@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const AuthMiddleware = require("../middleware/isAuth");
 const Chats = require("../Models/Chats");
+const Notes = require("../Models/Notepad");
 
 router.get("/chats", AuthMiddleware, (req, res) => {
 	Chats.find({ participants: req.user.username }).then((data) => {
@@ -34,6 +35,13 @@ router.get("/join/:id", AuthMiddleware, (req, res) => {
 		} else {
 			res.json({ error: "Enter a valid url" });
 		}
+	});
+});
+
+router.get("/notes/history/", AuthMiddleware, (req, res) => {
+	Notes.find({ participants: req.user.username }).then((data) => {
+		// console.log(data);
+		res.render("history", { notes: data });
 	});
 });
 

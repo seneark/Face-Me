@@ -220,8 +220,10 @@ function share() {
 function renameChat() {
 	const name = prompt("Enter the new name");
 	socket.emit("rename-chat", foo, name);
-	$(".chats-title-" + foo).text(name);
 }
+socket.on("rename-chat", (roomId, name) => {
+	$(".chats-title-" + roomId).text(name);
+});
 
 socket.on("createMessage", (message, userName, roomId) => {
 	if (userName === user) $('<li class="sent"><p>' + message + "</p></li>").appendTo($("#messages-" + roomId + " ul"));
