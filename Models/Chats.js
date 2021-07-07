@@ -4,6 +4,7 @@ const MessageSchema = new mongoose.Schema({
 	title: {
 		type: String,
 	},
+	name: String,
 	participants: [],
 	messages: [
 		{

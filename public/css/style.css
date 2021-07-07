@@ -64,6 +64,15 @@ textarea {
 	font-size: 16px;
 	border-radius: 10px;
 }
+#notepad-title {
+	padding: 5px 10px 5px 10px;
+	width: 20%;
+	background-color: var(--main-dark);
+	color: white;
+	font-family: "Nunito", sans-serif;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
 .white-board {
 	display: flex;

@@ -474,7 +474,7 @@ body {
 	outline: none;
 }
 #frame #sidepanel #bottom-bar button:nth-child(1) {
-	border-right: 5px solid #a993b1;
+	border-right: 5px solid var(--main-darklg);
 }
 @media screen and (max-width: 735px) {
 	#frame #sidepanel #bottom-bar button:nth-child(1) {
@@ -680,4 +680,22 @@ body {
 }
 #frame .content .message-input .wrap button:focus {
 	outline: none;
+}
+
+.info-bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 40%;
+	background-color: white;
+	height: 100%;
+	padding: 10px 10px 10px 20px;
+	display: none;
+}
+
+.d-flex {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-around;
 }

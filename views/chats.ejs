@@ -33,7 +33,7 @@
 						<li class="contact" id="wrap-<%=chats[i].title%>" onclick="showMsg('<%=chats[i].title%>')">
 							<div class="wrap" id="wrap-<%=chats[i].title%>">
 								<div class="meta">
-									<p class="name"><%= chats[i].title %></p>
+									<p class="name chats-title-<%=chats[i].title%>"><%= chats[i].name %></p>
 								</div>
 							</div>
 						</li>
@@ -41,8 +41,8 @@
 					</ul>
 				</div>
 				<div id="bottom-bar">
-					<button id="addcontact">
-						<i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span>
+					<button id="addcontact" onClick="createChat()">
+						<i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Create Chat</span>
 					</button>
 					<button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>
 				</div>
@@ -52,7 +52,7 @@
 
 				<div class="messages" id="messages-<%=chats[i].title%>">
 					<div class="contact-profile">
-						<p><%=chats[i].title%></p>
+						<p class="chats-title-<%=chats[i].title%>" onclick="toggleInfo()"><%=chats[i].name%></p>
 						<div class="social-media">
 							<i class="fa fa-share" aria-hidden="true" onClick="share()"></i>
 						</div>
@@ -75,6 +75,21 @@
 						<%}%> <%}%>
 					</ul>
 					<br />
+				</div>
+				<div class="info-bar" id="info-<%=chats[i].title%>">
+					<div class="d-flex">
+						<h4 class="chats-title-<%=chats[i].title%>"><%=chats[i].name%></h4>
+						<i class="fa fa-close fa-fw" aria-hidden="true" onclick="toggleInfo()"></i>
+					</div>
+					<h6 style="cursor: pointer" onclick="renameChat()">Rename this Chat</h6>
+					<div>
+						<h5>Participants</h5>
+						<ul>
+							<% for(let j = 0; j< chats[i].participants.length; j++){%>
+							<p><%=chats[i].participants[j]%></p>
+							<%}%>
+						</ul>
+					</div>
 				</div>
 				<% } %>
 

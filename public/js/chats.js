@@ -44,7 +44,7 @@ $(document).ready(function () {
 			return false;
 		}
 		// console.log(message);
-		socket.emit("message", message, foo, user);
+		socket.emit("message-chat-room", message, foo, user);
 
 		$(".message-input input").val(null);
 		$("#messages-" + foo).animate({ scrollTop: $("#messages-" + foo)[0].scrollHeight }, "fast");
@@ -69,10 +69,20 @@ $(document).ready(function () {
 	}
 });
 
+function createChat() {
+	let chats_title = prompt("Enter the name of Chat(Leave black if pressed accidentally)");
+	console.log(chats_title);
+	if (chats_title.length > 0) socket.emit("create-chat", chats_title, user);
+	setTimeout(function () {
+		location.reload();
+	}, 1000);
+}
+
 let receivingCaptions = false;
 let sendingCaptions = false;
 let VideoChatRecognition = undefined;
 let mic_icon = $("#mic-status");
+let showInfo = false;
 
 // Speech to text
 function requestToggleCaptions() {
@@ -154,6 +164,16 @@ function recieveCaptions(captions) {
 	$(".message-input input").val(captions);
 }
 
+function toggleInfo() {
+	if (showInfo == true) {
+		$("#info-" + prev).css("display", "none");
+		showInfo = false;
+	} else {
+		$("#info-" + prev).css("display", "block");
+		showInfo = true;
+	}
+}
+
 function showMsg(val) {
 	foo = val;
 	// console.log(Chats);
@@ -164,8 +184,10 @@ function showMsg(val) {
 		$("#messages-" + foo).css("display", "block");
 		$("#messages-" + foo).animate({ scrollTop: $("#messages-" + foo)[0].scrollHeight }, "fast");
 	} else {
+		showInfo = false;
 		$("#wrap-" + foo).addClass("active");
 		$("#wrap-" + prev).removeClass("active");
+		$("#info-" + prev).css("display", "none");
 		$("#messages-" + foo).css("display", "block");
 		$("#messages-" + prev).css("display", "none");
 		$("#messages-" + foo).animate({ scrollTop: $("#messages-" + foo)[0].scrollHeight }, "fast");
@@ -175,7 +197,7 @@ function showMsg(val) {
 
 function share() {
 	Snackbar.show({
-		text: "Here is the join link for your call: " + window.location.origin + "/join/" + foo,
+		text: "Here is the join link for your call: " + window.location.origin + "/home/join/" + foo,
 		actionText: "Copy Link",
 		width: "950px",
 		pos: "top-center",
@@ -185,7 +207,7 @@ function share() {
 		onActionClick: function (element) {
 			// Copy url to clipboard, this is achieved by creating a temporary element,
 			// adding the text we want to that element, selecting it, then deleting it
-			const copyContent = window.location.origin + "/join/" + foo;
+			const copyContent = window.location.origin + "/home/join/" + foo;
 			$('<input id="some-element">').val(copyContent).appendTo("body").select();
 			document.execCommand("copy");
 			const toRemove = document.querySelector("#some-element");
@@ -193,6 +215,12 @@ function share() {
 			Snackbar.close();
 		},
 	});
+}
+
+function renameChat() {
+	const name = prompt("Enter the new name");
+	socket.emit("rename-chat", foo, name);
+	$(".chats-title-" + foo).text(name);
 }
 
 socket.on("createMessage", (message, userName, roomId) => {

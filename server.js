@@ -22,6 +22,7 @@ const chats_ = require("./Routes/home");
 const Transcript = require("./Models/Transcript");
 const Chat = require("./Models/Chats");
 const User = require("./Models/User");
+const Notepad = require("./Models/Notepad");
 
 mongoose.connect(db, {
 	useNewUrlParser: true,
@@ -91,11 +92,9 @@ var Usr = {};
 var line_history = {};
 var notes = {};
 var notes_taken = {};
+var notes_title = {};
 
 var messages_obj = {};
-io.of("/chat-room").on("connection", (socket) => {
-	// Chat Room
-});
 io.on("connection", (socket) => {
 	socket.on("join-room", async (roomId, userId, userName) => {
 		console.log("Joining room: " + roomId);
@@ -122,6 +121,7 @@ io.on("connection", (socket) => {
 			} else {
 				const newChat = new Chat({
 					title: roomId,
+					name: roomId,
 				});
 
 				await newChat.save().then(async (data) => {
@@ -200,11 +200,13 @@ io.on("connection", (socket) => {
 			// add_transcript(userName, messages_obj[roomId]);
 		});
 	});
+
+	// Chat room
 	socket.on("join-chat", async (roomId) => {
 		// console.log(roomId);
 		await socket.join(roomId);
 	});
-	socket.on("message", async (message, roomId, userName) => {
+	socket.on("message-chat-room", async (message, roomId, userName) => {
 		// socket.leaveAll();
 		socket.join(roomId);
 		// console.log("f");
@@ -225,17 +227,72 @@ io.on("connection", (socket) => {
 		await io.to(roomId).emit("createMessage", message, userName, roomId);
 	});
 
+	socket.on("create-chat", async (chats_title, userName) => {
+		const newChat = new Chat({
+			name: chats_title,
+			title: uuidv4(),
+		});
+
+		await newChat.save().then(async (data) => {
+			await Chat.findOneAndUpdate(
+				{ _id: data._id },
+				{
+					$set: {
+						participants: userName,
+					},
+				}
+			);
+		});
+	});
+
+	socket.on("rename-chat", async (roomId, name) => {
+		console.log(roomId, name);
+		Chat.findOneAndUpdate(
+			{ title: roomId },
+			{
+				name: name,
+			}
+		).then((data) => {});
+	});
+
 	// canvas and notes
-	socket.on("join-notes", (roomId) => {
+	socket.on("join-notes", async (roomId, userName) => {
 		socket.join(roomId);
 		if (!(roomId in line_history)) {
 			line_history[roomId] = [];
 			notes[roomId] = null;
 			notes_taken[roomId] = 0;
+			notes_title[roomId] = "";
 		}
+		await Notepad.find({ roomId: roomId }).then(async (data) => {
+			if (data.length > 0) {
+				if (data[0].participants.indexOf(userName) == -1) {
+					await Notepad.findOneAndUpdate(
+						{ roomId: roomId },
+						{
+							$push: {
+								participants: userName,
+							},
+						}
+					).then((data) => {});
+				}
+				notes_title[roomId] = data[0].notes_title;
+				line_history[roomId] = data[0].line_history;
+				notes[roomId] = data[0].notes;
+			} else {
+				const newNotepad = new Notepad({
+					roomId: roomId,
+					$set: {
+						participants: userName,
+					},
+				});
+				await newNotepad.save();
+			}
+		});
 		socket.emit("startup", {
 			notes: notes[roomId],
 			notes_taken: notes_taken[roomId],
+			notes_title: notes_title[roomId],
 		});
 		if (roomId in line_history)
 			for (var i in line_history[roomId]) {
@@ -243,20 +300,39 @@ io.on("connection", (socket) => {
 			}
 		// add handler for message type "draw_line".
 		socket.on("draw_line", function (data) {
+			// console.log(roomId);
 			// add received line to history
 			line_history[roomId].push(data);
 			// send line to all clients
-			io.emit("draw_line", data);
+			io.to(roomId).emit("draw_line", data);
 		});
 
 		socket.on("clear_canvas", function () {
 			line_history[roomId] = [];
-			io.emit("clear_canvas");
+			io.to(roomId).emit("clear_canvas");
 		});
 
 		socket.on("notes_content", function (data) {
 			notes[roomId] = data.notes;
-			io.emit("notes_content", data);
+			io.to(roomId).emit("notes_content", data);
+		});
+
+		socket.on("title_content", function (data) {
+			notes_title[roomId] = data.notes_title;
+			io.to(roomId).emit("title_content", data);
+		});
+
+		socket.on("disconnect", function () {
+			Notepad.findOneAndUpdate(
+				{ roomId: roomId },
+				{
+					$set: {
+						line_history: line_history[roomId],
+						notes: notes[roomId],
+						notes_title: notes_title[roomId],
+					},
+				}
+			).then((data) => {});
 		});
 	});
 });

@@ -14,6 +14,7 @@
 		<title>Notes</title>
 		<script>
 			const ROOM_ID = "<%= roomId %>";
+			const USERNAME = "<%= UserName%>";
 		</script>
 	</head>
 	<body>
@@ -26,6 +27,11 @@
 					whiteboard
 				</h2>
 			</div>
+			<div class="col-md-12">
+				<p>Notepad Title</p>
+				<input id="notepad-title" placeholder="Enter Your title here" />
+			</div>
+			<br />
 			<div class="col-md-6">
 				<div class="well video-space" id="video-space">
 					<p>Write your notes here</p>
