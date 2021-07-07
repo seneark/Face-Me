@@ -648,7 +648,7 @@ body {
 	z-index: 4;
 	margin-top: 10px;
 	font-size: 1.1em;
-	color: var(--main-darklg);
+	color: #3e0154;
 	opacity: 0.5;
 	cursor: pointer;
 }

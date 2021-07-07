@@ -69,6 +69,91 @@ $(document).ready(function () {
 	}
 });
 
+let receivingCaptions = false;
+let sendingCaptions = false;
+let VideoChatRecognition = undefined;
+let mic_icon = $("#mic-status");
+
+// Speech to text
+function requestToggleCaptions() {
+	if (receivingCaptions) {
+		mic_icon.removeClass("fa-microphone");
+		mic_icon.addClass("fa-microphone-slash");
+		receivingCaptions = false;
+	} else {
+		Snackbar.show({
+			text: "This Displays Captions but only in Chrome window.",
+			width: "400px",
+			pos: "bottom-center",
+			actionTextColor: "#616161",
+			duration: 10000,
+		});
+		mic_icon.addClass("fa-microphone");
+		mic_icon.removeClass("fa-microphone-slash");
+		receivingCaptions = true;
+	}
+	toggleSendCaptions();
+}
+
+function toggleSendCaptions() {
+	if (sendingCaptions) {
+		sendingCaptions = false;
+		VideoChatRecognition.stop();
+	} else {
+		startSpeech();
+		sendingCaptions = true;
+	}
+}
+
+function startSpeech() {
+	try {
+		var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+		VideoChatRecognition = new SpeechRecognition();
+	} catch (e) {
+		sendingCaptions = false;
+		recieveCaptions("notusingchrome");
+		console.log(e);
+		return;
+	}
+	VideoChatRecognition.continuous = true;
+	VideoChatRecognition.interimResults = true;
+	var finalTranscript;
+	VideoChatRecognition.onresult = (event) => {
+		let interimTranscript = "";
+		for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+			var transcript = event.results[i][0].transcript;
+			if (event.results[i].isFinal) {
+				finalTranscript += transcript;
+			} else {
+				interimTranscript += transcript;
+				var charsToKeep = interimTranscript.length % 100;
+				recieveCaptions(interimTranscript.substring(interimTranscript.length - charsToKeep));
+			}
+		}
+	};
+	VideoChatRecognition.onend = function () {
+		if (sendingCaptions) {
+			startSpeech();
+		} else {
+			VideoChatRecognition.stop();
+		}
+	};
+	VideoChatRecognition.start();
+}
+
+function recieveCaptions(captions) {
+	if (captions === "notusingchrome") {
+		alert("Other caller must be using chrome for this feature to work. Live Caption turned off.");
+		receivingCaptions = false;
+		captionText.text("").fadeOut();
+		captionButtontext.text("Start Live Caption");
+		return;
+	}
+
+	let junk = $(".message-input input").val();
+	$(".message-input input").val(captions);
+}
+
 function showMsg(val) {
 	foo = val;
 	// console.log(Chats);
