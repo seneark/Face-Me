@@ -68,25 +68,6 @@ app.get("/:room", AuthMiddleware, (req, res) => {
 	res.render("room", { roomId: req.param.room, userName: req.user.username });
 });
 
-const add_transcript = (userName, messages_obj) => {
-	// console.log(messages_obj);
-
-	const newTranscript = new Transcript({
-		username: userName,
-		date: new Date(),
-	});
-	// newTranscript.messages.push(messages_obj[0])
-
-	newTranscript.save().then((data) => {
-		// console.log(data);
-		Transcript.findOneAndUpdate({ _id: data._id }, { $set: { messages: messages_obj } })
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((err) => console.log(err));
-	});
-};
-
 var Usr = {};
 
 var line_history = {};
@@ -246,7 +227,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("rename-chat", async (roomId, name) => {
-		console.log(roomId, name);
+		// console.log(roomId, name);
 		Chat.findOneAndUpdate(
 			{ title: roomId },
 			{
@@ -264,38 +245,39 @@ io.on("connection", (socket) => {
 			notes[roomId] = null;
 			notes_taken[roomId] = 0;
 			notes_title[roomId] = "";
-		}
-		await Notepad.find({ roomId: roomId }).then(async (data) => {
-			if (data.length > 0) {
-				if (data[0].participants.indexOf(userName) == -1) {
-					await Notepad.findOneAndUpdate(
-						{ roomId: roomId },
-						{
-							$push: {
-								participants: userName,
-							},
-						}
-					).then((data) => {});
+			await Notepad.find({ roomId: roomId }).then(async (data) => {
+				if (data.length > 0) {
+					if (data[0].participants.indexOf(userName) == -1) {
+						await Notepad.findOneAndUpdate(
+							{ roomId: roomId },
+							{
+								$push: {
+									participants: userName,
+								},
+							}
+						).then((data) => {});
+					}
+					notes_title[roomId] = data[0].notes_title;
+					line_history[roomId] = data[0].line_history;
+					notes[roomId] = data[0].notes;
+				} else {
+					const newNotepad = new Notepad({
+						roomId: roomId,
+					});
+					await newNotepad.save().then((data) => {
+						Notepad.findOneAndUpdate(
+							{ roomId: roomId },
+							{
+								$push: {
+									participants: userName,
+								},
+							}
+						).then((data) => {});
+					});
 				}
-				notes_title[roomId] = data[0].notes_title;
-				line_history[roomId] = data[0].line_history;
-				notes[roomId] = data[0].notes;
-			} else {
-				const newNotepad = new Notepad({
-					roomId: roomId,
-				});
-				await newNotepad.save().then((data) => {
-					Notepad.findOneAndUpdate(
-						{ roomId: roomId },
-						{
-							$push: {
-								participants: userName,
-							},
-						}
-					).then((data) => {});
-				});
-			}
-		});
+			});
+		}
+
 		socket.emit("startup", {
 			notes: notes[roomId],
 			notes_taken: notes_taken[roomId],

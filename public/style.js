@@ -21,7 +21,9 @@ function convert_to_percentage($el) {
 }
 
 container.addEventListener("mousedown", dragStart, false);
-
+function redirectHome() {
+	window.location = window.location.origin + "/auth/home";
+}
 function dragStart(e) {
 	$("#screen-title").resizable();
 	$(".main-cont").draggable({

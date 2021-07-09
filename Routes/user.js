@@ -6,7 +6,7 @@ const Transcript = require("../Models/Transcript");
 const passport = require("passport");
 
 router.get("/", (req, res) => {
-	res.render("auth.ejs");
+	res.render("auth.ejs", { errorSingUp: null, errorSignIn: null });
 });
 router.get("/home", AuthMiddleware, async (req, res) => {
 	res.render("home.ejs", { userName: req.user.username });
@@ -26,25 +26,43 @@ router.post("/signUp", (req, res) => {
 	User.register(newUser, req.body.password, (err, user) => {
 		if (err) {
 			console.log(err);
-			res.redirect("/auth");
+			res.render("auth.ejs", { errorSingUp: err, errorSignIn: null });
 		}
 		//console.log(req.user);
 		passport.authenticate("local")(req, res, function () {
 			//alert("Successful Registration");
-			res.redirect("/auth");
+			res.render("auth.ejs", { errorSingUp: null, errorSignIn: null });
 		});
 	});
 });
-router.post(
-	"/signIn",
-	passport.authenticate("local", {
-		successRedirect: "/auth/home",
-		failureRedirect: "/auth",
-	}),
-	function (req, res) {
-		//console.log(req.user);
-		console.log(req.body);
-	}
-);
+// router.post(
+// 	"/signIn",
+// 	passport.authenticate("local", {
+// 		successRedirect: "/auth/home",
+// 		failureRedirect: "/auth",
+// 	}),
+// 	function (req, res) {
+// 		//console.log(req.user);
+// 		console.log(req.body);
+// 	}
+// );
+
+router.post("/signIn", function (req, res, next) {
+	passport.authenticate("local", function (err, user, info) {
+		if (err) {
+			console.log(err);
+		}
+		if (!user) {
+			res.render("auth.ejs", { errorSingUp: null, errorSignIn: "Verify username and password" });
+		} else {
+			req.logIn(user, function (err) {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/auth/home");
+			});
+		}
+	})(req, res, next);
+});
 
 module.exports = router;
