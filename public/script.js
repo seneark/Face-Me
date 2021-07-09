@@ -66,7 +66,7 @@ const user = USERNAME;
 
 var peer = new Peer(undefined, {
 	path: "/peerjs",
-	host: "face-me-engage.herokuapp.com/",
+	host: "face-me-engage.herokuapp.com",
 	port: "443",
 });
 
