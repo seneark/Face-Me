@@ -5,12 +5,20 @@ const User = require("../Models/User");
 const Transcript = require("../Models/Transcript");
 const passport = require("passport");
 
+// @route   GET auth/
+// @desc    shows the login/Register page
 router.get("/", (req, res) => {
 	res.render("auth.ejs", { errorSingUp: null, errorSignIn: null });
 });
+
+// @route   GET auth/home
+// @desc    shows the home page
 router.get("/home", AuthMiddleware, async (req, res) => {
 	res.render("home.ejs", { userName: req.user.username });
 });
+
+// @route   GET auth/transcript
+// @desc    shows transcript
 router.get("/transcript", AuthMiddleware, (req, res) => {
 	Transcript.find({ username: req.user.username }).then((data) => {
 		console.log(data);
@@ -18,6 +26,8 @@ router.get("/transcript", AuthMiddleware, (req, res) => {
 	});
 });
 
+// @route   POST auth/signUp
+// @desc    signup User based on Username and password
 router.post("/signUp", (req, res) => {
 	const newUser = new User({
 		username: req.body.username,
@@ -35,18 +45,9 @@ router.post("/signUp", (req, res) => {
 		});
 	});
 });
-// router.post(
-// 	"/signIn",
-// 	passport.authenticate("local", {
-// 		successRedirect: "/auth/home",
-// 		failureRedirect: "/auth",
-// 	}),
-// 	function (req, res) {
-// 		//console.log(req.user);
-// 		console.log(req.body);
-// 	}
-// );
 
+// @route   POST auth/signIn
+// @desc    signIn user based on username and password
 router.post("/signIn", function (req, res, next) {
 	passport.authenticate("local", function (err, user, info) {
 		if (err) {

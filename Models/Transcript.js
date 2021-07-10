@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema for Transcript
 const TranscriptSchema = new mongoose.Schema({
 	username: String,
 	messages: [

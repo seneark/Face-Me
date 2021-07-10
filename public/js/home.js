@@ -1,3 +1,5 @@
+// Used for the slider on auth/home
+
 // Slider(all Slides in a container)
 const slider = document.querySelector(".slider")
 // All trails 

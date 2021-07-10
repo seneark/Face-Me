@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema for chats
 const MessageSchema = new mongoose.Schema({
 	title: {
 		type: String,

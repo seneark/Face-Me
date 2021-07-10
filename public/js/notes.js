@@ -12,20 +12,25 @@ document.addEventListener("DOMContentLoaded", function () {
 		notepad_title.val(data.notes_title);
 	});
 
+
 	notes_textarea.keyup(function () {
+		// send the notes written
 		socket.emit("notes_content", { notes: $(this).val(), uid: uid });
 	});
 	notepad_title.keyup(function () {
+		// sends the title of notepad
 		socket.emit("title_content", { notes_title: $(this).val(), uid: uid });
 	});
 
 	socket.on("notes_content", function (data) {
+		// updates the text area for content
 		if (data.uid != uid) {
 			notes_textarea.val(data.notes);
 		}
 	});
 
 	socket.on("title_content", function (data) {
+		// updates the title content
 		if (data.uid != uid) {
 			notepad_title.val(data.notes_title);
 		}

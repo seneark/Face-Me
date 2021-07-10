@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema for Notepad
 const NotepadSchema = new mongoose.Schema({
 	notes_title: {
 		type: String,

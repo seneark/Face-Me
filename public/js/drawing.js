@@ -1,6 +1,4 @@
-/**
- * Created by leart on 17-05-04.
- */
+// Used for the whiteboard on notes/ page
 document.addEventListener("DOMContentLoaded", function () {
   var color = "#" + ((Math.random() * 0xffffff) << 0).toString(16);
   var mouse = {
@@ -9,10 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
     pos: { x: 0, y: 0 },
     pos_prev: false,
   };
+  // gets the roomId from the url pathname
   let room_id = window.location.pathname;
   room_id = room_id.split("/")[3];
   var socket = io.connect();
+
+  // joins a room using room_id
   socket.emit("join-notes", room_id);
+
   // get canvas element and create context
   var canvas = document.getElementById("drawing");
   var context = canvas.getContext("2d");
@@ -63,10 +65,12 @@ document.addEventListener("DOMContentLoaded", function () {
     context.stroke();
   });
 
+  // triggered when clear button is pressed and it clears the canvas
   socket.on("clear_canvas", function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
   });
 
+  // downloads the image
   $("#download_image").click(function () {
     this.href = document.getElementById("drawing").toDataURL();
     this.download = "image.png";
