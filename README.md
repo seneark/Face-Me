@@ -4,14 +4,21 @@
 
 ## Table of Contents
   - [Website Demo](#website-demo)
+  - [Tech Stack](#tech-stack)
   - [About](#about)
   - [Installation Prerequisites](#installation-prerequisites)
   - [How to Run this Website](#how-to-run-this-website)
 
 ## Website Demo
-[Click Here to Watch Video](https://drive.google.com/file/d/1wj1Tgwz1l3Ut9xOQCI70xGcFJ4233SS_/view) \
+[Click Here to Watch Video](https://youtu.be/dkVzDjc2aIo) \
 [Click Here to See the Project Planning Presentation](https://1drv.ms/p/s!Aj0KFZJOAy1vfYBAGH8IpCqWRJ4?e=hif3RF)
+**Watch the video in 720p or higher and you can also use the English auto-generated captions which work perfectly with the video**
 
+## Tech Stack
+1. NodeJs
+2. MongoDB Atlas
+3. Socket.io
+4. Peerjs
 
 ## About
 This is a peer to peer video conferencing website where a user can chats, Video call with the additional feature of Notepad where Users can collaborate on notes and whiteboard.
