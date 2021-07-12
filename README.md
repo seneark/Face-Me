@@ -11,7 +11,7 @@
 
 ## Website Demo
 [Click Here to Watch Video](https://youtu.be/dkVzDjc2aIo) \
-[Click Here to See the Project Planning Presentation](https://1drv.ms/p/s!Aj0KFZJOAy1vfYBAGH8IpCqWRJ4?e=hif3RF) \
+[Click Here to See the Project Planning Presentation](https://1drv.ms/p/s!Aj0KFZJOAy1vfYBAGH8IpCqWRJ4?e=WTamq2) \
 **Watch the video in 720p or higher and you can also use the English auto-generated captions which work perfectly with the video**
 
 ## Tech Stack
