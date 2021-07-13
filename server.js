@@ -228,7 +228,7 @@ io.on("connection", (socket) => {
 	socket.on("join-notes", async (roomId, userName) => {
 		socket.join(roomId);
 
-		// initialises the notes and line history with previous session
+		// initializes the notes and line history with previous session
 		if (!(roomId in line_history)) {
 			line_history[roomId] = [];
 			notes[roomId] = null;
